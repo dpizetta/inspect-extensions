@@ -110,9 +110,16 @@ ENV/
 env.bak/
 venv.bak/
 
-# Spyder project settings
+# Project files
+.project
+.pydevproject
+.pydevproject*
+.pydevproject.*
+.pydevproject.bak*
+.settings
+.vscode
+.spyproject*
 .spyderproject
-.spyproject
 
 # Rope project settings
 .ropeproject

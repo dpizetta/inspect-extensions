@@ -1,0 +1,11 @@
+# See tox.ini file to know how to use them via command line
+
+# Main packages to make sure they are there
+setuptools
+pip
+wheel
+virtualenv
+
+# To generate documentation
+sphinx>=2.0
+sphinx_rtd_theme

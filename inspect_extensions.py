@@ -10,6 +10,8 @@ Author:
     - Daniel Cosmo Pizetta
 """
 
+__version__ = '0.1'
+
 import abc
 import argparse
 import enum
@@ -22,9 +24,6 @@ import sys
 import termcolor
 
 _logger = logging.getLogger(__name__)
-_logger.setLevel(logging.WARNING)
-
-__version__ = '0.1'
 
 
 # functions for member name --------------------------------------------------
@@ -266,6 +265,10 @@ FTYPE = 5
 ISWHAT = 6
 MEMBER = 7
 
+FILTER = {TYPE: ['ALL'],
+          ENCAPSULATION: ['ALL'],
+          EVIDENCED: ['ALL']}
+
 
 def print_member_colored(members_list):
     """Print members in colored list."""
@@ -377,12 +380,7 @@ def get_members_from_class(prefix, member):
     return mbr_list
 
 
-def filter_members(
-        mbr_list,
-        filter_={TYPE: ['ALL'],
-                 ENCAPSULATION: ['ALL'],
-                 EVIDENCED: ['ALL']}):
-
+def filter_members(mbr_list, filter_=FILTER):
     #  mbr_list.sort(key=lambda tup: tup[0])
 
     def filters(element):
@@ -528,14 +526,12 @@ def get_members_from_module(pkg_mod_name):
 
 
 def main(arguments):
+    """Run inspect extensions."""
 
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('obj', help="Input object (package, module, class)", type=str)
 
-    parser.add_argument('--colored', help="Print colored members", type=str)
-
     parser.add_argument('--filter', help="[PACKAGE, MODULE, CLASS, METHOD, DATA, ALL]")
-
     parser.add_argument('-p', '--packages', help="Show just packages")
     parser.add_argument('-m', '--modules', help="Show just modules")
     parser.add_argument('-c', '--classes', help="Show just classes")
@@ -545,13 +541,13 @@ def main(arguments):
     parser.add_argument('-a', '--all_members', help="Show all members (DEFAULT)(packages, modules, classes, methods, functions, data)")
 
     parser.add_argument('--encapsulation', help="[NONE, PUBLIC, PROTECTED, PRIVATE, ALL]")
-
     parser.add_argument('-b', '--public', help="Show just public members (DEFAULT)")
     parser.add_argument('-o', '--protected', help="Show just protected members")
     parser.add_argument('-i', '--private', help="Show just private members")
     parser.add_argument('-e', '--all_encapsulation', help="Show all encapsulation")
 
     parser.add_argument('--count_members', help="Shows the number of members")
+    parser.add_argument('--colored', help="Print colored members", type=str)
     parser.add_argument('--text_only', help="Print just text characters - not colorized", type=str)
 
     parser.add_argument('--special_classes', help="Print special classes, '__' before and after name", type=str)
@@ -564,14 +560,10 @@ def main(arguments):
     parser.add_argument('--remove_special_members', help="Filter special members, see special_members", type=str)
 
     args = parser.parse_args(arguments)
-
     mbr_list = get_members_from_module(args.obj)
 
-    termcolor.cprint(
-        STR_FORMATED.format('PREFIX', 'NAME', 'TYPE', 'ENCAPS', 'EVINDECED',
-                            'type()', 'inspect'),
-        'red',
-        attrs={'bold': True})
+    termcolor.cprint(STR_FORMATED.format('PREFIX', 'NAME', 'TYPE', 'ENCAPS', 'EVINDECED', 'type()', 'inspect'),
+                     'red', attrs={'bold': True})
 
     mbr_list_filtered = filter_members(mbr_list, {TYPE: ['DATA']})
     print_member_colored(mbr_list)

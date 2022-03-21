@@ -10,7 +10,7 @@ Author:
     - Daniel Cosmo Pizetta
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 import abc
 import argparse
@@ -116,7 +116,7 @@ def get_ancestors(kls):
     class_inheritance[full_class_name] = kls
 
     while kls.__base__ and kls.__base__ != object:
-        _logger.debug("Full class name: %s", full_class_name)       
+        _logger.debug("Full class name: %s", full_class_name)
         kls = kls.__base__
         module_name = kls.__module__
         class_name = kls.__name__
@@ -526,11 +526,15 @@ def get_members_from_module(pkg_mod_name):
     return mbr_list
 
 
-def main(arguments):
+def main():
     """Run inspect extensions."""
 
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('obj', help="Input object (package, module, class)", type=str)
+    parser.add_argument('obj', help="Input object name (package, module, class). Ex.: pathlib", type=str)
+
+    parser.add_argument('--count_members', help="Shows the number of members", action='store_true')
+    parser.add_argument('--colored', help="Print colored members", action='store_true')
+    parser.add_argument('--text_only', help="Print just text characters - not colorized", action='store_true')
 
     parser.add_argument('--filter', help="[PACKAGE, MODULE, CLASS, METHOD, DATA, ALL]")
     parser.add_argument('-p', '--packages', help="Show just packages")
@@ -547,10 +551,6 @@ def main(arguments):
     parser.add_argument('-i', '--private', help="Show just private members")
     parser.add_argument('-e', '--all_encapsulation', help="Show all encapsulation")
 
-    parser.add_argument('--count_members', help="Shows the number of members")
-    parser.add_argument('--colored', help="Print colored members", type=str)
-    parser.add_argument('--text_only', help="Print just text characters - not colorized", type=str)
-
     parser.add_argument('--special_classes', help="Print special classes, '__' before and after name", type=str)
     parser.add_argument('--special_methods', help="Print special methods, '__' before and after name", type=str)
     parser.add_argument('--special_data', help="Print special data, '__' before and after name", type=str)
@@ -560,7 +560,9 @@ def main(arguments):
     parser.add_argument('--remove_special_data', help="Filter special data, see special_data", type=str)
     parser.add_argument('--remove_special_members', help="Filter special members, see special_members", type=str)
 
-    args = parser.parse_args(arguments)
+    parser.add_argument('--version', action='version', version=f'inspect-extensions v{__version__}')
+
+    args = parser.parse_args(sys.argv[1:])
     mbr_list = get_members_from_module(args.obj)
 
     termcolor.cprint(STR_FORMATED.format('PREFIX', 'NAME', 'TYPE', 'ENCAPS', 'EVINDECED', 'type()', 'inspect'),
@@ -571,4 +573,4 @@ def main(arguments):
 
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())

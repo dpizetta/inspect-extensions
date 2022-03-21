@@ -119,3 +119,6 @@ Help
         Filter special data, see special_data
     --remove_special_members REMOVE_SPECIAL_MEMBERS
         Filter special members, see special_members
+
+    --version
+        Show program's version number and exit

@@ -1,6 +1,13 @@
 Changes
 =======
 
+v0.1.2
+------
+
+* Fix entry point function call arguments
+* Enhance arguments options and order
+
+
 v0.1.1
 ------
 

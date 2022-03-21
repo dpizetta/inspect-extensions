@@ -113,14 +113,15 @@ def get_ancestors(kls):
     class_name = kls.__name__
     full_class_name = module_name + "." + class_name
     class_inheritance = {}
+    class_inheritance[full_class_name] = kls
 
     while kls.__base__ and kls.__base__ != object:
-        _logger.debug("Full class name: %s", full_class_name)
-        class_inheritance[full_class_name] = kls
+        _logger.debug("Full class name: %s", full_class_name)       
         kls = kls.__base__
         module_name = kls.__module__
         class_name = kls.__name__
         full_class_name = module_name + "." + class_name
+        class_inheritance[full_class_name] = kls
 
     return class_inheritance
 

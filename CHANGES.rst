@@ -1,6 +1,11 @@
 Changes
 =======
 
+v0.1.3
+------
+
+* Remove break if an import is not found, but log the error
+
 v0.1.2
 ------
 

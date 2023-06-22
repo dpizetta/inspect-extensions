@@ -498,13 +498,10 @@ def get_members_from_module(pkg_mod_name):
                 try:
                     mbr = importlib.import_module(mbr_name)
                 except ImportError as err:
-                    print("ImportError - We could not import: %s", mbr_name)
-                    print(err)
-                    break
+                    _logger.exception("ImportError - We could not import: %s", mbr_name)
                 except IOError as err:
-                    print("IOError - We could not import: %s", mbr_name)
-                    print(err)
-                    break
+                    _logger.exception("IOError - We could not import: %s", mbr_name)
+
                 mod_direct = False
                 if is_pkg:
                     mbr_type = 'PACKAGE'

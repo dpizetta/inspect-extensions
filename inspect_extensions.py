@@ -331,7 +331,7 @@ def is_what(obj):
         # get functions that starts with 'is'
         if func_name.startswith('is'):
             # apply the function to the object
-            if func(obj):
+            if callable(func):
                 obj_is.append(func_name)
     return obj_is
 

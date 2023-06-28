@@ -1,6 +1,11 @@
 Changes
 =======
 
+v0.1.5
+------
+
+* Fix calling non callable objects in is_what()
+
 v0.1.3
 ------
 

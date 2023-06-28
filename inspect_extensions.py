@@ -328,10 +328,10 @@ def is_what(obj):
     obj_is = []
     # get a list of all functions from inspect
     for func_name, func in inspect.getmembers(inspect):
-        # get functions that starts with 'is'
-        if func_name.startswith('is'):
+        # get functions that starts with 'is' and is a function
+        if func_name.startswith('is') and inspect.isfunction(func):
             # apply the function to the object
-            if callable(func):
+            if func(obj):
                 obj_is.append(func_name)
     return obj_is
 

@@ -460,12 +460,14 @@ def get_members_from_module(pkg_mod_name):
     mbr_list = []
     prefix = ''
     mbr_name = ''
+    pkg_mod_start = None
 
     try:
         pkg_mod_start = importlib.import_module(pkg_mod_name)
         mbr_name = pkg_mod_start.__name__
     except ImportError:
-        get_members_from_class(pkg_mod_name, pkg_mod_name().__class__)
+        _logger.exception(f"IOError - We could not import: {pkg_mod_name}. The module name is wrong or not installed.")
+
     else:
         try:
             path_ = pkg_mod_start.__path__
@@ -519,15 +521,17 @@ def get_members_from_module(pkg_mod_name):
                 mbr_list.append((prefix, mbr_name, mbr_type, mbr_encapsulation,
                                  mbr_evidences, type(mbr).__name__, is_what(mbr), mbr))
                 mbr_list += get_members_from_class(prefix + '.' + mbr_name, mbr)
-
-    return mbr_list
+    if pkg_mod_start:
+        return mbr_list
+    else:
+        return None
 
 
 def main():
     """Run inspect extensions."""
 
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('obj', help="Input object name (package, module, class). Ex.: pathlib", type=str)
+    parser.add_argument('obj', help="Input object name (package, module). Ex.: pathlib", type=str)
 
     parser.add_argument('--count_members', help="Shows the number of members", action='store_true')
     parser.add_argument('--colored', help="Print colored members", action='store_true')
@@ -562,12 +566,12 @@ def main():
     args = parser.parse_args(sys.argv[1:])
     mbr_list = get_members_from_module(args.obj)
 
-    termcolor.cprint(STR_FORMATED.format('PREFIX', 'NAME', 'TYPE', 'ENCAPS', 'EVINDECED', 'type()', 'inspect'),
+    if mbr_list:
+        termcolor.cprint(STR_FORMATED.format('PREFIX', 'NAME', 'TYPE', 'ENCAPS', 'EVINDECED', 'type()', 'inspect'),
                      'red', attrs={'bold': True})
 
-    mbr_list_filtered = filter_members(mbr_list, {TYPE: ['DATA']})
-    print_member_colored(mbr_list)
-
+        mbr_list_filtered = filter_members(mbr_list, {TYPE: ['DATA']})
+        print_member_colored(mbr_list)
 
 if __name__ == '__main__':
     sys.exit(main())

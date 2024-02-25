@@ -1,6 +1,11 @@
 Changes
 =======
 
+v0.1.6
+------
+
+* Fix return error when package/module is not installed
+
 v0.1.5
 ------
 
